@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, recursive_getters
+// ignore_for_file: unused_field
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -37,6 +37,7 @@ class Auth with ChangeNotifier {
           'returnSecureToken': true,
         }),
       );
+      print(json.decode(response.body));
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
@@ -50,7 +51,6 @@ class Auth with ChangeNotifier {
       );
       notifyListeners();
     } catch (error) {
-      print('Authentication failed: $error'); // Add logging here
       rethrow;
     }
   }

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_element
+// ignore_for_file: prefer_final_fields
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -49,7 +49,6 @@ class AuthScreen extends StatelessWidget {
                       transform: Matrix4.rotationZ(-8 * pi / 270)
                         ..translate(-10.0),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: const [
                           BoxShadow(
@@ -106,7 +105,10 @@ class AuthCardState extends State<AuthCard> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('An Error Occurred!'),
+        title: const Text(
+          'An Error Occurred!',
+          style: TextStyle(color: Colors.red),
+        ),
         content: Text(message),
         actions: <Widget>[
           TextButton(
@@ -129,7 +131,6 @@ class AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-
     try {
       if (_authMode == AuthMode.login) {
         // Log user in
@@ -145,19 +146,20 @@ class AuthCardState extends State<AuthCard> {
         );
       }
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
+      var errorMessages = 'Authentication failed';
+
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address.';
+        errorMessages = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_LOGIN_CREDENTIALS')) {
+        errorMessages = 'This is not a valid email address.';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak.';
+        errorMessages = 'This password is too weak.';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
+        errorMessages = 'Could not find a user with that email.';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
+        errorMessages = 'Invalid password.';
       }
-      _showErrorDialog(errorMessage);
+      _showErrorDialog(errorMessages);
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
@@ -198,6 +200,7 @@ class AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
@@ -211,6 +214,7 @@ class AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
+                  textInputAction: TextInputAction.next,
                   controller: _passwordController,
                   validator: (value) {
                     if (value!.isEmpty || value.length < 5) {
@@ -228,6 +232,7 @@ class AuthCardState extends State<AuthCard> {
                     decoration:
                         const InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
+                    textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (_authMode == AuthMode.signup &&
                           value != _passwordController.text) {

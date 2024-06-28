@@ -1,4 +1,3 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,19 +59,8 @@ class MyApp extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
           ),
-          home: AnimatedSplashScreen(
-            duration: 1500,
-            splash: const Icon(
-              Icons.shopify,
-              size: 150,
-              color: Colors.white,
-            ),
-            nextScreen: auth.isAuth
-                ? const ProductOverviewScreen()
-                : const AuthScreen(),
-            splashTransition: SplashTransition.slideTransition,
-            backgroundColor: Colors.deepOrange,
-          ),
+          home:
+              auth.isAuth ? const ProductOverviewScreen() : const AuthScreen(),
           routes: {
             ProductDetailScreen.routeName: (context) =>
                 const ProductDetailScreen(),
