@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +13,10 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
+  String? get userId {
+    return _userId;
+  }
+
   String? get token {
     if (_expiryDate != null &&
         _expiryDate!.isAfter(DateTime.now()) &&
@@ -22,6 +24,13 @@ class Auth with ChangeNotifier {
       return _token;
     }
     return null;
+  }
+
+  void logout() {
+    _token = null;
+    _expiryDate = null;
+    _userId = null;
+    notifyListeners();
   }
 
   Future<void> _authenticate(

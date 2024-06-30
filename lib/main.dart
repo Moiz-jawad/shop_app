@@ -26,17 +26,23 @@ class MyApp extends StatelessWidget {
           create: (context) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductProvider>(
-          create: (_) => ProductProvider('', []),
-          update: (context, auth, previousItem) => ProductProvider(
+          create: (_) => ProductProvider('', '', []),
+          update: (_, auth, previousItem) => ProductProvider(
             auth.token!,
+            auth.userId!,
             previousItem == null ? [] : previousItem.items,
           ),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => Order(),
+        ChangeNotifierProxyProvider<Auth, Order>(
+          create: (_) => Order('', '', []),
+          update: (_, auth, previousOrders) => Order(
+            auth.token!,
+            auth.userId!,
+            previousOrders == null ? [] : previousOrders.orders,
+          ),
         ),
       ],
       child: Consumer<Auth>(
@@ -44,6 +50,20 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'MyShop',
           theme: ThemeData(
+            progressIndicatorTheme:
+                const ProgressIndicatorThemeData(color: Colors.deepOrange),
+            elevatedButtonTheme: const ElevatedButtonThemeData(
+              style: ButtonStyle(
+                animationDuration: Durations.long1,
+                elevation: MaterialStatePropertyAll(9),
+                backgroundColor: MaterialStatePropertyAll(
+                  Colors.deepOrange,
+                ),
+                foregroundColor: MaterialStatePropertyAll(
+                  Colors.white,
+                ),
+              ),
+            ),
             textButtonTheme: const TextButtonThemeData(
               style: ButtonStyle(
                 foregroundColor: MaterialStatePropertyAll(Colors.deepOrange),

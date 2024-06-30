@@ -148,7 +148,7 @@ class AuthCardState extends State<AuthCard> {
     } on HttpException catch (error) {
       var errorMessages = 'Authentication failed';
 
-      if (error.toString().contains('EMAIL_EXISTS')) {
+      if (error.message.contains('EMAIL_EXISTS')) {
         errorMessages = 'This email address is already in use.';
       } else if (error.toString().contains('INVALID_LOGIN_CREDENTIALS')) {
         errorMessages = 'This is not a valid email address.';
@@ -214,7 +214,7 @@ class AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   controller: _passwordController,
                   validator: (value) {
                     if (value!.isEmpty || value.length < 5) {
@@ -249,13 +249,6 @@ class AuthCardState extends State<AuthCard> {
                 else
                   ElevatedButton(
                     onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30.0, vertical: 8.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
                     child:
                         Text(_authMode == AuthMode.login ? 'LOGIN' : 'SIGN UP'),
                   ),
@@ -264,7 +257,6 @@ class AuthCardState extends State<AuthCard> {
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30.0, vertical: 4),
-                    textStyle: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   child: Text(
                       '${_authMode == AuthMode.login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),

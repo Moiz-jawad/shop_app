@@ -175,9 +175,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: _isLaoding
           ? const Center(
               child: CircularProgressIndicator(
-                color: Colors.deepOrange,
                 strokeCap: StrokeCap.round,
-                strokeWidth: 8.5,
+                strokeWidth: 6.5,
                 strokeAlign: BorderSide.strokeAlignCenter,
               ),
             )
@@ -286,7 +285,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             ),
                           ),
                           child: _imageUrlController.text.isEmpty
-                              ? const Text('Enter a URL')
+                              ? const Center(
+                                  child: Text('Enter a URL'),
+                                )
                               : FittedBox(
                                   child: Image.network(
                                     _imageUrlController.text,
