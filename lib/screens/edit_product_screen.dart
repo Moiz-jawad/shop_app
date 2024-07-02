@@ -34,7 +34,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   };
 
   var _isInit = true;
-  var _isLaoding = false;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -93,69 +93,85 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState!.save();
     setState(() {
-      _isLaoding = true;
+      _isLoading = true;
     });
     if (_editedProduct.id.isNotEmpty) {
       await Provider.of<ProductProvider>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct)
-          .catchError((error) {
-        return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              'Oops!',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-            content: const Text(
-              'Something went wrong.',
-              style: TextStyle(color: Colors.black87),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Done',
+          .catchError(
+        (error) {
+          showDialog<Null>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                textAlign: TextAlign.center,
+                'Oops!',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              content: Text(
+                'Something went wrong',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade700,
                 ),
               ),
-            ],
-          ),
-        );
-      });
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Done',
+                    style: TextStyle(
+                      color: Colors.deepOrange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     } else {
       await Provider.of<ProductProvider>(context, listen: false)
           .addProduct(_editedProduct)
-          .catchError((error) {
-        return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              'Oops',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-            content: const Text(
-              'Something went wrong',
-              style: TextStyle(
-                color: Colors.black87,
+          .catchError(
+        (error) {
+          showDialog<Null>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                textAlign: TextAlign.center,
+                'Oops!',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Done',
+              content: Text(
+                'Something went wrong',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade700,
                 ),
               ),
-            ],
-          ),
-        );
-      });
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Done',
+                    style: TextStyle(
+                      color: Colors.deepOrange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
     setState(() {
-      _isLaoding = false;
+      _isLoading = false;
     });
     Navigator.of(context).pop();
   }
@@ -172,11 +188,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: _isLaoding
+      body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
+                color: Colors.deepOrange,
+                strokeWidth: 8,
                 strokeCap: StrokeCap.round,
-                strokeWidth: 6.5,
                 strokeAlign: BorderSide.strokeAlignCenter,
               ),
             )
@@ -285,9 +302,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             ),
                           ),
                           child: _imageUrlController.text.isEmpty
-                              ? const Center(
-                                  child: Text('Enter a URL'),
-                                )
+                              ? const Text('Enter a URL')
                               : FittedBox(
                                   child: Image.network(
                                     _imageUrlController.text,

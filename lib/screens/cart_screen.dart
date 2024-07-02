@@ -103,7 +103,10 @@ class _OrderButtonState extends State<OrderButton> {
           ? const CircularProgressIndicator(
               color: Colors.deepOrange,
             )
-          : Text(widget.cart.totalAmount <= 0 ? 'None' : 'Checkout'),
+          : const Text(
+              'Checkout',
+              style: TextStyle(color: Colors.deepOrange),
+            ),
     );
   }
 }

@@ -11,39 +11,37 @@ class Product with ChangeNotifier {
   final String imageUrl;
   bool isFavorite;
 
-  Product({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-    this.isFavorite = false,
-  });
+  Product(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.price,
+      required this.imageUrl,
+      this.isFavorite = false});
 
   void setFavorite(bool newVal) {
     isFavorite = newVal;
     notifyListeners();
   }
 
-  Future<void> toggleFavorite(String token, String userId) async {
+  Future<void> toogleFavorite() async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url =
-        'https://myshop-915a2-default-rtdb.firebaseio.com/userFavorite/$userId/$id.json?auth=$token';
+        'https://myshop-915a2-default-rtdb.firebaseio.com/products/$id.json';
     try {
-      final response = await http.put(
+      final response = await http.patch(
         Uri.parse(url),
-        body: json.encode(
-          isFavorite,
-        ),
+        body: json.encode({
+          'isFavorite': isFavorite,
+        }),
       );
       if (response.statusCode >= 400) {
         setFavorite(oldStatus);
       }
     } catch (error) {
       setFavorite(oldStatus);
-      rethrow;
     }
   }
 }

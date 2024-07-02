@@ -23,57 +23,49 @@ class OrderItem with ChangeNotifier {
 
 class Order with ChangeNotifier {
   List<OrderItem> _orders = [];
-  final String authToken;
-  final String userId;
-
-  Order(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchAndSetOrders() async {
-    final url =
-        'https://myshop-915a2-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
+    const url = 'https://myshop-915a2-default-rtdb.firebaseio.com/orders.json';
     final response = await http.get(Uri.parse(url));
     final List<OrderItem> loadedOrders = [];
-    final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData == null) {
       return;
     }
-    extractedData.forEach(
-      (ordId, ordData) {
-        loadedOrders.add(
-          OrderItem(
-            id: ordId,
-            amount: ordData['amount'],
-            dateTime: DateTime.parse(ordData['dateTime']),
-            products: (ordData['products'] as List<dynamic>)
-                .map(
-                  (item) => CartItem(
-                    id: item['id'],
-                    title: item['title'],
-                    price: item['price'],
-                    quantity: item['quantity'],
-                  ),
-                )
-                .toList(),
-          ),
-        );
-      },
-    );
+    extractedData.forEach((orderId, orderData) {
+      loadedOrders.add(
+        OrderItem(
+          id: orderId,
+          amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
+          products: (orderData['products'] as List<dynamic>)
+              .map(
+                (item) => CartItem(
+                  id: item['id'],
+                  price: item['price'],
+                  quantity: item['quantity'],
+                  title: item['title'],
+                ),
+              )
+              .toList(),
+        ),
+      );
+    });
     _orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
 
   Future<void> addorder(List<CartItem> cartProducts, double total) async {
-    final url =
-        'https://myshop-915a2-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
-
+    const url = 'https://myshop-915a2-default-rtdb.firebaseio.com/orders.json';
+    final timeStamp = DateTime.now();
     final response = await http.post(Uri.parse(url),
         body: json.encode({
           'amount': total,
-          'dateTime': DateTime.now().toIso8601String(),
+          'dateTime': timeStamp.toIso8601String(),
           'products': cartProducts
               .map((cp) => {
                     'id': cp.id,
@@ -81,7 +73,7 @@ class Order with ChangeNotifier {
                     'price': cp.price,
                     'quantity': cp.quantity,
                   })
-              .toList()
+              .toList(),
         }));
     _orders.insert(
       0,
@@ -89,7 +81,7 @@ class Order with ChangeNotifier {
         id: json.decode(response.body)['name'],
         products: cartProducts,
         amount: total,
-        dateTime: DateTime.now(),
+        dateTime: timeStamp,
       ),
     );
     notifyListeners();

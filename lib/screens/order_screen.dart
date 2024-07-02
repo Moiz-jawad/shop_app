@@ -5,29 +5,28 @@ import 'package:shop_app/widgets/order_item.dart';
 import '../providers/order.dart' show Order;
 import '../widgets/side_drawer.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+class OrdersScreen extends StatefulWidget {
+  const OrdersScreen({super.key});
 
   static const routeName = '/order';
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<OrdersScreen> createState() => _OrdersScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
-  var _isLaoding = false;
+class _OrdersScreenState extends State<OrdersScreen> {
+  var _isloading = false;
   @override
   void initState() {
-    Future.delayed(Duration.zero).then((_) {
+    setState(() {
+      _isloading = true;
+    });
+    Provider.of<Order>(context, listen: false).fetchAndSetOrders().then((_) {
       setState(() {
-        _isLaoding = true;
-      });
-      Provider.of<Order>(context, listen: false).fetchAndSetOrders().then((_) {
-        setState(() {
-          _isLaoding = false;
-        });
+        _isloading = false;
       });
     });
+
     super.initState();
   }
 
@@ -39,9 +38,10 @@ class _OrderScreenState extends State<OrderScreen> {
         title: const Text('Your Orders'),
       ),
       drawer: const SideDrawer(),
-      body: _isLaoding
+      body: _isloading
           ? const Align(
-              child: CircularProgressIndicator(
+              alignment: Alignment.topCenter,
+              child: LinearProgressIndicator(
                 color: Colors.deepOrange,
               ),
             )

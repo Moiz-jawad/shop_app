@@ -33,23 +33,35 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<ProductProvider>(context, listen: false)
+      Provider.of<ProductProvider>(context)
           .fetchAndSetProduct()
           .catchError((error) {
-        showDialog(
+        showDialog<Null>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text(
+              textAlign: TextAlign.center,
               'Oops!',
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
-            content: const Text('Something went wrong'),
+            content: Text(
+              'Something went wrong',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade700,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Done'),
+                child: const Text(
+                  'Done',
+                  style: TextStyle(
+                    color: Colors.deepOrange,
+                  ),
+                ),
               ),
             ],
           ),
@@ -59,8 +71,8 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           _isLoading = false;
         });
       });
-      _isInit = false;
     }
+    _isInit = false;
     super.didChangeDependencies();
   }
 
