@@ -84,26 +84,30 @@ class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
-          ? null
-          : () async {
-              setState(() {
-                _isLoading = true;
-              });
-              await Provider.of<Order>(context, listen: false).addorder(
-                widget.cart.item.values.toList(),
-                widget.cart.totalAmount,
-              );
-              setState(() {
-                _isLoading = false;
-              });
-              widget.cart.clearCart();
-            },
-      child: _isLoading
-          ? const CircularProgressIndicator(
-              color: Colors.deepOrange,
-            )
-          : Text(widget.cart.totalAmount <= 0 ? 'None' : 'Checkout'),
-    );
+        onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+            ? null
+            : () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                await Provider.of<Order>(context, listen: false).addorder(
+                  widget.cart.item.values.toList(),
+                  widget.cart.totalAmount,
+                );
+                setState(() {
+                  _isLoading = false;
+                });
+                widget.cart.clearCart();
+              },
+        child: _isLoading
+            ? const CircularProgressIndicator(
+                color: Colors.deepOrange,
+              )
+            : widget.cart.totalAmount <= 0
+                ? const Text(
+                    'Empty cart!',
+                    style: TextStyle(color: Colors.grey),
+                  )
+                : const Text('Checkout'));
   }
 }

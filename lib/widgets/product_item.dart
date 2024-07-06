@@ -73,9 +73,16 @@ class ProductItem extends StatelessWidget {
                   );
                 }),
           ),
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              fit: BoxFit.cover,
+              colorBlendMode: BlendMode.dstOut,
+              fadeOutCurve: Curves.decelerate,
+              placeholder:
+                  const AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+            ),
           ),
         ),
       ),
