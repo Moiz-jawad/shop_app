@@ -13,7 +13,6 @@ import './providers/order.dart';
 import './screens/auth_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/user_product_screen.dart';
-import 'transaction/custom_transition.dart';
 
 void main() => runApp(const MyApp());
 
@@ -60,18 +59,18 @@ class MyApp extends StatelessWidget {
             elevatedButtonTheme: const ElevatedButtonThemeData(
               style: ButtonStyle(
                 animationDuration: Durations.long1,
-                elevation: MaterialStatePropertyAll(9),
-                backgroundColor: MaterialStatePropertyAll(
+                elevation: WidgetStatePropertyAll(9),
+                backgroundColor: WidgetStatePropertyAll(
                   Colors.deepOrange,
                 ),
-                foregroundColor: MaterialStatePropertyAll(
+                foregroundColor: WidgetStatePropertyAll(
                   Colors.white,
                 ),
               ),
             ),
             textButtonTheme: const TextButtonThemeData(
               style: ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.deepOrange),
+                foregroundColor: WidgetStatePropertyAll(Colors.deepOrange),
               ),
             ),
             textTheme: const TextTheme(
